@@ -1,0 +1,37 @@
+{
+	"name": "qui-sera-le-prochain",
+	"version": "0.0.1",
+	"type": "module",
+	"scripts": {
+		"dev:front": "vite",
+		"dev:back": "./pocketbase/pocketbase serve",
+		"build": "tsc && vite build",
+		"preview": "vite preview",
+		"lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0"
+	},
+	"dependencies": {
+		"@radix-ui/react-dialog": "^1.0.4",
+		"@radix-ui/react-tooltip": "^1.0.6",
+		"@tanstack/react-query": "^4.35.3",
+		"framer-motion": "^10.16.4",
+		"ky": "^1.0.1",
+		"pocketbase": "^0.18.0",
+		"react": "^18.2.0",
+		"react-dom": "^18.2.0",
+		"react-router-dom": "^6.16.0",
+		"remixicon": "^3.5.0",
+		"zod": "^3.22.2"
+	},
+	"devDependencies": {
+		"@types/react": "^18.2.15",
+		"@types/react-dom": "^18.2.7",
+		"@typescript-eslint/eslint-plugin": "^6.0.0",
+		"@typescript-eslint/parser": "^6.0.0",
+		"@vitejs/plugin-react": "^4.0.3",
+		"eslint": "^8.45.0",
+		"eslint-plugin-react-hooks": "^4.6.0",
+		"eslint-plugin-react-refresh": "^0.4.3",
+		"typescript": "^5.0.2",
+		"vite": "^4.4.5"
+	}
+}
