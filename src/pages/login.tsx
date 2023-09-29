@@ -32,6 +32,7 @@ export default function Login() {
         <main
             style={{
                 display: 'flex',
+                flexDirection: 'column',
                 justifyContent: 'center',
                 alignItems: 'center',
                 height: '100%'
@@ -65,6 +66,11 @@ export default function Login() {
                     </Flex>
                 </form>
             </Card>
+            <a href={`mailto:${import.meta.env.VITE_MAIL_TO_ADMIN}subject=[Qui sera le prochain] Demande de compte`}>
+                <Text color='indigo' mt='2'>
+                    Demander un compte
+                </Text>
+            </a>
         </main>
     )
 }
