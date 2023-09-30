@@ -1,5 +1,3 @@
-import { Button } from '@radix-ui/themes'
-import { usePocket } from '../contexts/PocketContext'
 import HeadingTitle from '../components/heading-title'
 import { Box, SimpleGrid, createStyles } from '@mantine/core'
 import { useCollaborators } from '../hooks/collaborators/use-collaborators'
@@ -7,7 +5,6 @@ import { PronisticCard } from '../components/pronostic-card'
 
 export default function Home() {
     const { classes } = useStyles()
-    const { logout } = usePocket()
 
     const { data } = useCollaborators()
 
@@ -26,13 +23,11 @@ export default function Home() {
             >
                 {data && data.map((collab) => <PronisticCard key={collab.id} user={collab.expand['user']} />)}
             </SimpleGrid>
-
-            <Button onClick={() => logout()}>logout</Button>
         </Box>
     )
 }
 
-const useStyles = createStyles((theme) => ({
+const useStyles = createStyles(() => ({
     main: {
         maxWidth: 1200,
         margin: 'auto'

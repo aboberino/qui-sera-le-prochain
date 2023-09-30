@@ -1,6 +1,7 @@
 import { Navigate, Outlet, useLocation } from 'react-router-dom'
 
 import { usePocket } from '../contexts/PocketContext'
+import Header from './header'
 
 export default function ProtectedRoute() {
     const { user } = usePocket()
@@ -10,5 +11,10 @@ export default function ProtectedRoute() {
         return <Navigate to={{ pathname: '/login' }} state={{ location }} replace />
     }
 
-    return <Outlet />
+    return (
+        <>
+            <Header />
+            <Outlet />
+        </>
+    )
 }
