@@ -5,7 +5,7 @@ type PronisticCardProps = {
     user: User
 }
 
-export function PronisticCard({ user }: PronisticCardProps) {
+export function PronosticCard({ user }: PronisticCardProps) {
     const avatarUrl = `${import.meta.env.VITE_API_URL}/files/users/${user.id}/${user.avatar}`
     const randomCote = (1 + Math.random() * 1.5).toFixed(2)
     return (
