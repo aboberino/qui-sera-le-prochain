@@ -1,16 +1,16 @@
-import PocketBase, { AuthModel, RecordAuthResponse, RecordModel } from 'pocketbase'
+import PocketBase, { RecordAuthResponse, RecordModel } from 'pocketbase'
 import { useMemo, useState, useEffect, useCallback, useContext, createContext } from 'react'
+import { User } from '../types/user'
 
 type PocketContextType = {
     login: (username: string, password: string) => Promise<RecordAuthResponse<RecordModel>>
     logout: () => void
-    user: AuthModel
+    user: User | null
     token: string
     pb: PocketBase
 }
 
-const PocketContext = createContext<PocketContextType>({} as PocketContextType);
-
+const PocketContext = createContext<PocketContextType>({} as PocketContextType)
 
 type PocketProviderProps = {
     children: React.ReactNode
@@ -20,12 +20,12 @@ export function PocketProvider({ children }: PocketProviderProps) {
     const pb = useMemo(() => new PocketBase(import.meta.env.VITE_POCKETBASE_URL), [])
 
     const [token, setToken] = useState(pb.authStore.token)
-    const [user, setUser] = useState<AuthModel>(pb.authStore.model)
+    const [user, setUser] = useState<User | null>(pb.authStore.model as User | null)
 
     useEffect(() => {
         return pb.authStore.onChange((token, model) => {
             setToken(token)
-            setUser(model)
+            setUser(model as User | null)
         })
     }, [])
 
@@ -40,4 +40,4 @@ export function PocketProvider({ children }: PocketProviderProps) {
     return <PocketContext.Provider value={{ login, logout, user, token, pb }}>{children}</PocketContext.Provider>
 }
 
-export const usePocket = () => useContext(PocketContext);
+export const usePocket = () => useContext(PocketContext)
