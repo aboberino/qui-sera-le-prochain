@@ -1,11 +1,12 @@
 import { Flex, Button, Text } from '@radix-ui/themes'
 import { usePocket } from '../contexts/PocketContext'
+import HeadingTitle from '../components/heading-title'
 
 export default function Home() {
     const { logout } = usePocket()
     return (
         <div>
-            <h1>Home</h1>
+            <HeadingTitle text='Qui sera le' textColored='prochain' /> 
 
             <Button onClick={() => logout()}>logout</Button>
 

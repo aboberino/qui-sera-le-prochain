@@ -1,8 +1,9 @@
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 import { usePocket } from '../contexts/PocketContext'
-import { Alert, Button, Card, Stack, Text, TextInput, Title } from '@mantine/core'
+import { Alert, Button, Card, Stack, Text, TextInput } from '@mantine/core'
 import { useForm } from '@mantine/form'
+import HeadingTitle from '../components/heading-title'
 
 type LoginUser = {
     username: string
@@ -54,18 +55,13 @@ export default function Login() {
             <Card sx={{ width: 400 }} shadow='sm' padding='lg' radius='md' withBorder>
                 <form onSubmit={form.onSubmit(onSubmit)}>
                     <Stack>
-                        <Title order={3} align='center'>
-                            Qui sera le {' '}
-                            <Text span c='indigo' inherit>
-                                prochain
-                            </Text>
-                        </Title>
+                        <HeadingTitle text='Qui sera le' textColored='prochain' align='center' />
 
                         <TextInput placeholder='Username' withAsterisk {...form.getInputProps('username')} />
 
                         <TextInput type='password' placeholder='Password' withAsterisk {...form.getInputProps('password')} />
 
-                        <Button type='submit' style={{ width: '100%' }}>
+                        <Button type='submit'>
                             Se connecter
                         </Button>
 
