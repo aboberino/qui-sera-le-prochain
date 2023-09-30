@@ -1,9 +1,9 @@
 import { Card, TextField, Flex, Text, Button, Callout } from '@radix-ui/themes'
 import { useForm } from 'react-hook-form'
-import { pb } from '../main'
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 import { InfoCircledIcon } from '@radix-ui/react-icons'
+import { usePocket } from '../contexts/PocketContext'
 
 type LoginUser = {
     username: string
@@ -13,12 +13,15 @@ type LoginUser = {
 export default function Login() {
     const navigate = useNavigate()
     const { handleSubmit, register } = useForm<LoginUser>()
+    const { login, user } = usePocket()
 
     const [isAuthFailed, setIsAuthFailed] = useState(false)
 
+    if (user) navigate('/')
+
     async function onSubmit(user: LoginUser) {
         try {
-            const authData = await pb.collection('users').authWithPassword(user.username, user.password)
+            const authData = await login(user.username, user.password)
             if (authData) {
                 navigate('/')
             }
