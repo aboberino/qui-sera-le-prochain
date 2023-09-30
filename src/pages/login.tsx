@@ -1,9 +1,8 @@
-import { Card, TextField, Flex, Text, Button, Callout } from '@radix-ui/themes'
-import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
-import { InfoCircledIcon } from '@radix-ui/react-icons'
 import { usePocket } from '../contexts/PocketContext'
+import { Alert, Button, Card, Stack, Text, TextInput, Title } from '@mantine/core'
+import { useForm } from '@mantine/form'
 
 type LoginUser = {
     username: string
@@ -12,7 +11,18 @@ type LoginUser = {
 
 export default function Login() {
     const navigate = useNavigate()
-    const { handleSubmit, register } = useForm<LoginUser>()
+
+    const form = useForm<LoginUser>({
+        initialValues: {
+            username: '',
+            password: ''
+        },
+        validate: {
+            username: (value) => (value.length < 2 ? 'Must have at least 2 letters' : null),
+            password: (value) => (value.length < 2 ? 'Must have at least 2 letters' : null)
+        }
+    })
+
     const { login, user } = usePocket()
 
     const [isAuthFailed, setIsAuthFailed] = useState(false)
@@ -41,32 +51,26 @@ export default function Login() {
                 height: '100%'
             }}
         >
-            <Card style={{ width: 400 }}>
-                <form onSubmit={handleSubmit(onSubmit)}>
-                    <Flex gap='3' align='center' direction='column'>
-                        <Text as='div' size='6'>
-                            Qui sera le prochain
-                        </Text>
+            <Card sx={{ width: 400 }} shadow='sm' padding='lg' radius='md' withBorder>
+                <form onSubmit={form.onSubmit(onSubmit)}>
+                    <Stack>
+                        <Title order={3} align='center'>
+                            Qui sera le {' '}
+                            <Text span c='indigo' inherit>
+                                prochain
+                            </Text>
+                        </Title>
 
-                        <TextField.Root style={{ width: '100%' }}>
-                            <TextField.Input placeholder='username' {...register('username', { required: true })} />
-                        </TextField.Root>
+                        <TextInput placeholder='Username' withAsterisk {...form.getInputProps('username')} />
 
-                        <TextField.Root style={{ width: '100%' }}>
-                            <TextField.Input placeholder='password' {...register('password', { required: true })} type='password' />
-                        </TextField.Root>
+                        <TextInput type='password' placeholder='Password' withAsterisk {...form.getInputProps('password')} />
 
-                        <Button style={{ width: '100%' }}>Se connecter</Button>
+                        <Button type='submit' style={{ width: '100%' }}>
+                            Se connecter
+                        </Button>
 
-                        {isAuthFailed && (
-                            <Callout.Root color='red' style={{ width: '100%', boxSizing: 'border-box' }}>
-                                <Callout.Icon>
-                                    <InfoCircledIcon />
-                                </Callout.Icon>
-                                <Callout.Text>Username ou password invalide.</Callout.Text>
-                            </Callout.Root>
-                        )}
-                    </Flex>
+                        {isAuthFailed && <Alert color='red'>Username ou password invalide.</Alert>}
+                    </Stack>
                 </form>
             </Card>
             <a href={`mailto:${import.meta.env.VITE_MAIL_TO_ADMIN}subject=[Qui sera le prochain] Demande de compte`}>

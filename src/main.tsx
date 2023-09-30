@@ -1,16 +1,14 @@
 import './index.css'
-import '@radix-ui/themes/styles.css'
 import './theme-config.css'
-import 'remixicon/fonts/remixicon.css'
 
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { Theme } from '@radix-ui/themes'
+import { MantineProvider } from '@mantine/core'
 import PocketBase from 'pocketbase'
 import App from './app'
 import { PocketProvider } from './contexts/PocketContext'
-
+import fontMonaSans from '/Mona-Sans.woff2'
 
 
 const queryClient = new QueryClient()
@@ -19,11 +17,19 @@ export const pb = new PocketBase(import.meta.env.VITE_POCKETBASE_URL)
 ReactDOM.createRoot(document.getElementById('root')!).render(
     <React.StrictMode>
         <QueryClientProvider client={queryClient}>
-            <Theme appearance='dark'>
+            <MantineProvider
+                withGlobalStyles
+                withNormalizeCSS
+                theme={{
+                    colorScheme: 'dark',
+                    primaryColor: 'indigo',
+                    fontFamily: fontMonaSans
+                }}
+            >
                 <PocketProvider>
                     <App />
-                </PocketProvider> 
-            </Theme>
+                </PocketProvider>
+            </MantineProvider>
         </QueryClientProvider>
     </React.StrictMode>
 )
