@@ -25,7 +25,7 @@ function PronoCard({ user, form, onSubmit }: PronisticCardProps) {
                         {user.name}
                     </Text>
 
-                    <Button variant='filled' fullWidth mt='md'>
+                    <Button variant='filled'  fullWidth mt='md'>
                         {randomCote}
                     </Button>
                 </Card>
@@ -41,7 +41,7 @@ function PronoCard({ user, form, onSubmit }: PronisticCardProps) {
                         {...form.getInputProps('spentPoints')}
                     />
 
-                    <Button variant='filled' fullWidth mt='md' type='submit'>
+                    <Button variant='filled' color='green' fullWidth mt='md' type='submit'>
                         Valider
                     </Button>
                 </form>
