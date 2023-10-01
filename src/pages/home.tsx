@@ -4,6 +4,9 @@ import { useCollaborators } from '../hooks/collaborators/use-collaborators'
 import { PronosticCard } from '../components/pronostic-card'
 import { useForm } from '@mantine/form'
 import { usePocket } from '../contexts/PocketContext'
+import useCreateVote from '../hooks/votes/use-create-vote'
+import { User } from '../types/user'
+import { RecordModelExpanded } from '../types/pocketbase'
 
 export type VoteInput = {
     spentPoints: number
@@ -13,6 +16,7 @@ export default function Home() {
     const { classes } = useStyles()
     const { user } = usePocket()
     const { data } = useCollaborators()
+    const createVote = useCreateVote()
 
     const form = useForm<VoteInput>({
         initialValues: {
@@ -25,8 +29,16 @@ export default function Home() {
 
     const maxPoints = data?.filter((collab) => collab.expand['user'].id === user?.id)[0]['points']
 
-    function onSubmit(values: VoteInput) {
-        console.log(values)
+    function onSubmit(values: VoteInput, collaborator: RecordModelExpanded<User>) {
+        if (!user) return
+        const data = {
+            user_voting: user.id,
+            collaborator: collaborator.id,
+            session: 'tdu8ir7s54wanti', // fetch current session
+            spentPoints: values.spentPoints
+        }
+
+        createVote.mutate(data)
     }
 
     return (
@@ -41,10 +53,7 @@ export default function Home() {
                     { maxWidth: '36rem', cols: 1, spacing: 'sm' }
                 ]}
             >
-                {data &&
-                    data.map((collab) => (
-                        <PronosticCard key={collab.id} user={collab.expand['user']} form={form} onSubmit={onSubmit} />
-                    ))}
+                {data && data.map((collab) => <PronosticCard key={collab.id} collaborator={collab} form={form} onSubmit={onSubmit} />)}
             </SimpleGrid>
         </Box>
     )

@@ -3,14 +3,16 @@ import { User } from '../types/user'
 import { VoteInput } from '../pages/home'
 import { UseFormReturnType } from '@mantine/form'
 import { memo, useMemo } from 'react'
+import { RecordModelExpanded } from '../types/pocketbase'
 
 type PronisticCardProps = {
-    user: User
+    collaborator: RecordModelExpanded<User>
     form: UseFormReturnType<VoteInput, (values: VoteInput) => VoteInput>
-    onSubmit: (values: VoteInput) => void
+    onSubmit: (values: VoteInput, collaborator: RecordModelExpanded<User>) => void
 }
 
-function PronoCard({ user, form, onSubmit }: PronisticCardProps) {
+function PronoCard({ collaborator, form, onSubmit }: PronisticCardProps) {
+    const user = useMemo(() => collaborator.expand['user'], [collaborator])
     const avatarUrl = `${import.meta.env.VITE_API_URL}/files/users/${user.id}/${user.avatar}`
 
     const randomCote = useMemo(() => (1 + Math.random() * 1.5).toFixed(2), [])
@@ -25,21 +27,15 @@ function PronoCard({ user, form, onSubmit }: PronisticCardProps) {
                         {user.name}
                     </Text>
 
-                    <Button variant='filled'  fullWidth mt='md'>
+                    <Button variant='filled' fullWidth mt='md'>
                         {randomCote}
                     </Button>
                 </Card>
             </Popover.Target>
 
             <Popover.Dropdown sx={(theme) => ({ background: theme.colors.dark[7] })}>
-                <form onSubmit={form.onSubmit(onSubmit)}>
-                    <NumberInput
-                        label='Nombre de points'
-                        placeholder='ex: 10'
-                        size='xs'
-                        min={0}
-                        {...form.getInputProps('spentPoints')}
-                    />
+                <form onSubmit={form.onSubmit((values) => onSubmit(values, collaborator))}>
+                    <NumberInput label='Nombre de points' placeholder='ex: 10' size='xs' min={0} {...form.getInputProps('spentPoints')} />
 
                     <Button variant='filled' color='green' fullWidth mt='md' type='submit'>
                         Valider
