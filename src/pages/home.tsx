@@ -7,6 +7,7 @@ import { usePocket } from '../contexts/PocketContext'
 import useCreateVote from '../hooks/votes/use-create-vote'
 import { User } from '../types/user'
 import { RecordModelExpanded } from '../types/pocketbase'
+import { useSession } from '../hooks/sessions/use-session'
 
 export type VoteInput = {
     spentPoints: number
@@ -14,9 +15,13 @@ export type VoteInput = {
 
 export default function Home() {
     const { classes } = useStyles()
-    const { user } = usePocket()
-    const { data } = useCollaborators()
+    const { user, collaborator } = usePocket()
+    const { data: collaborators } = useCollaborators({ enabled: !!collaborator?.equipe })
+    const { data: currentSession } = useSession({ equipeId: collaborator?.equipe ?? '', enabled: !!collaborator?.equipe })
+
     const createVote = useCreateVote()
+
+    const maxPoints = collaborator?.points ?? 0
 
     const form = useForm<VoteInput>({
         initialValues: {
@@ -27,18 +32,16 @@ export default function Home() {
         }
     })
 
-    const maxPoints = data?.filter((collab) => collab.expand['user'].id === user?.id)[0]['points']
-
     function onSubmit(values: VoteInput, collaborator: RecordModelExpanded<User>) {
-        if (!user) return
-        const data = {
+        if (!user || !currentSession) return
+        const newVote = {
             user_voting: user.id,
             collaborator: collaborator.id,
-            session: 'tdu8ir7s54wanti', // fetch current session
+            session: currentSession.id,
             spentPoints: values.spentPoints
         }
 
-        createVote.mutate(data)
+        createVote.mutate(newVote)
     }
 
     return (
@@ -53,7 +56,8 @@ export default function Home() {
                     { maxWidth: '36rem', cols: 1, spacing: 'sm' }
                 ]}
             >
-                {data && data.map((collab) => <PronosticCard key={collab.id} collaborator={collab} form={form} onSubmit={onSubmit} />)}
+                {collaborators &&
+                    collaborators.map((collab) => <PronosticCard key={collab.id} collaborator={collab} form={form} onSubmit={onSubmit} />)}
             </SimpleGrid>
         </Box>
     )
