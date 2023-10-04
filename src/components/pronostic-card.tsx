@@ -18,31 +18,33 @@ function PronoCard({ collaborator, form, onSubmit }: PronisticCardProps) {
     const randomCote = useMemo(() => (1 + Math.random() * 1.5).toFixed(2), [])
 
     return (
-        <Popover width='target' trapFocus position='bottom' withArrow shadow='md'>
-            <Popover.Target>
-                <Card shadow='sm' padding='lg' radius='md' withBorder sx={{ overflow: 'visible' }}>
-                    <Avatar src={avatarUrl} size={120} radius={120} mx='auto' />
+        <>
+            <Card shadow='sm' padding='lg' radius='md' withBorder sx={{ overflow: 'visible' }}>
+                <Avatar src={avatarUrl} size={120} radius={120} mx='auto' />
 
-                    <Text ta='center' fz='lg' fw={500} mt='md'>
-                        {user.name}
-                    </Text>
+                <Text ta='center' fz='lg' fw={500} mt='md'>
+                    {user.name}
+                </Text>
 
-                    <Button variant='filled' fullWidth mt='md'>
-                        {randomCote}
-                    </Button>
-                </Card>
-            </Popover.Target>
+                <Popover width='target' trapFocus position='bottom' withArrow shadow='md'>
+                    <Popover.Target>
+                        <Button variant='filled' fullWidth mt='md'>
+                            {randomCote}
+                        </Button>
+                    </Popover.Target>
 
-            <Popover.Dropdown sx={(theme) => ({ background: theme.colors.dark[7] })}>
-                <form onSubmit={form.onSubmit((values) => onSubmit(values, collaborator))}>
-                    <NumberInput label='Nombre de points' placeholder='ex: 10' size='xs' min={0} {...form.getInputProps('spentPoints')} />
+                    <Popover.Dropdown sx={(theme) => ({ background: theme.colors.dark[7] })}>
+                        <form onSubmit={form.onSubmit((values) => onSubmit(values, collaborator))}>
+                            <NumberInput label='Nombre de points' placeholder='ex: 10' size='xs' min={0} {...form.getInputProps('spentPoints')} />
 
-                    <Button variant='filled' color='green' fullWidth mt='md' type='submit'>
-                        Valider
-                    </Button>
-                </form>
-            </Popover.Dropdown>
-        </Popover>
+                            <Button variant='filled' color='green' fullWidth mt='md' type='submit'>
+                                Valider
+                            </Button>
+                        </form>
+                    </Popover.Dropdown>
+                </Popover>
+            </Card>
+        </>
     )
 }
 
