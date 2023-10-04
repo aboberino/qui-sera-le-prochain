@@ -8,6 +8,7 @@ import useCreateVote from '../hooks/votes/use-create-vote'
 import { User } from '../types/user'
 import { RecordModelExpanded } from '../types/pocketbase'
 import { useSession } from '../hooks/sessions/use-session'
+import { useVote } from '../hooks/votes/use-vote'
 
 export type VoteInput = {
     spentPoints: number
@@ -15,9 +16,12 @@ export type VoteInput = {
 
 export default function Home() {
     const { classes } = useStyles()
+
     const { user, collaborator } = usePocket()
-    const { data: collaborators } = useCollaborators({ enabled: !!collaborator?.equipe })
+
     const { data: currentSession } = useSession({ equipeId: collaborator?.equipe ?? '', enabled: !!collaborator?.equipe })
+    const { data: vote } = useVote({ userId: user?.id ?? '', sessionId: currentSession?.id ?? '', enabled: !!user && !!currentSession })
+    const { data: collaborators } = useCollaborators({ enabled: !!collaborator?.equipe })
 
     const createVote = useCreateVote()
 
@@ -28,12 +32,18 @@ export default function Home() {
             spentPoints: 0
         },
         validate: {
-            spentPoints: (value) => (value > maxPoints ? `Vous disposez de ${maxPoints} points` : null)
+            spentPoints: (value) => (value > maxPoints 
+                ? `Vous disposez de ${maxPoints} points` 
+                : value < 1 
+                ? 'Montant minial : 1'
+                : null),
         }
     })
 
     function onSubmit(values: VoteInput, collaborator: RecordModelExpanded<User>) {
         if (!user || !currentSession) return
+        console.log('spentPoints = ', values.spentPoints)
+
         const newVote = {
             user_voting: user.id,
             collaborator: collaborator.id,
@@ -57,7 +67,16 @@ export default function Home() {
                 ]}
             >
                 {collaborators &&
-                    collaborators.map((collab) => <PronosticCard key={collab.id} collaborator={collab} form={form} onSubmit={onSubmit} />)}
+                    vote !== undefined &&
+                    collaborators.map((collab) => (
+                        <PronosticCard
+                            key={collab.id}
+                            collaborator={collab}
+                            form={form}
+                            onSubmit={onSubmit}
+                            vote={vote}
+                        />
+                    ))}
             </SimpleGrid>
         </Box>
     )

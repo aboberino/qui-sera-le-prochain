@@ -6,5 +6,10 @@ export const collaboratorsKeys = {
 
 export const sessionsKeys = {
     root: ['sessionsKeys'] as const,
-    current: (equipeId: string) => [...collaboratorsKeys.root, equipeId] as const
+    current: (equipeId: string) => [...sessionsKeys.root, equipeId] as const
+}
+
+export const votesKeys = {
+    root: ['votesKeys'] as const,
+    one: (userId: string) => [...votesKeys.root, userId] as const
 }

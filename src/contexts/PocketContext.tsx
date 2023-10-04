@@ -35,8 +35,6 @@ export function PocketProvider({ children }: PocketProviderProps) {
         setCollaborator(collab ?? null)
     }, [collab])
 
-    console.log({ collab })
-
     useEffect(() => {
         return pb.authStore.onChange((token, model) => {
             setToken(token)
