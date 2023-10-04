@@ -13,7 +13,7 @@ type PronisticCardProps = {
 
 function PronoCard({ collaborator, form, onSubmit }: PronisticCardProps) {
     const user = useMemo(() => collaborator.expand['user'], [collaborator])
-    const avatarUrl = `${import.meta.env.VITE_API_URL}/files/users/${user.id}/${user.avatar}`
+    const avatarUrl = user.avatar ? `${import.meta.env.VITE_API_URL}/files/users/${user.id}/${user.avatar}` : ''
 
     const randomCote = useMemo(() => (1 + Math.random() * 1.5).toFixed(2), [])
 
