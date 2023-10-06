@@ -10,7 +10,8 @@ export const CollaboratorSchema = z.object({
     points: z.number(),
     equipe: z.string(),
     user: z.string(),
-    isLeft: z.boolean()
+    isLeft: z.boolean(),
+    startMissionDate: z.string(),
 })
 
 export const CollaboratorCollectionSchema = z.object({

@@ -6,6 +6,7 @@ import { memo, useMemo } from 'react'
 import { RecordModelExpanded } from '../types/pocketbase'
 import { IconAlertCircle, IconCircleCheck } from '@tabler/icons-react'
 import { Vote } from '../types/vote'
+import { calculCote } from '../utils/functions'
 
 type PronisticCardProps = {
     collaborator: RecordModelExpanded<User>
@@ -14,13 +15,18 @@ type PronisticCardProps = {
     vote: Vote | null
 }
 
+const NB_JOURS = (Math.random() + 10) * (Math.random() * 10)
+
 function PronoCard({ collaborator, form, onSubmit, vote }: PronisticCardProps) {
     const user = useMemo(() => collaborator.expand['user'], [collaborator])
     const isVoted = useMemo(() => vote?.collaborator === collaborator['id'], [vote, collaborator])
 
     const avatarUrl = user.avatar ? `${import.meta.env.VITE_API_URL}/files/users/${user.id}/${user.avatar}` : ''
 
-    const randomCote = useMemo(() => (1 + Math.random() * 1.5).toFixed(2), [])
+    const cote = useMemo(() => {
+        return calculCote(NB_JOURS, Math.floor(Math.random() * 11))
+    }, [])
+    // const randomCote = useMemo(() => (1 + Math.random() * 1.5).toFixed(2), [])
 
     return (
         <>
@@ -49,20 +55,22 @@ function PronoCard({ collaborator, form, onSubmit, vote }: PronisticCardProps) {
                         icon={<IconAlertCircle size='1rem' />}
                         radius='md'
                         title={`Points parié : ${vote?.spentPoints}`}
-                    > </Alert>
+                    >
+                        {' '}
+                    </Alert>
                 )}
 
                 <Popover width='target' trapFocus position='bottom' withArrow shadow='md'>
                     <Popover.Target>
-                        {isVoted ? (
-                            <Button leftIcon={<IconCircleCheck />} variant='filled' fullWidth mt='md' color='green'>
-                                {randomCote}
-                            </Button>
-                        ) : (
-                            <Button variant='filled' fullWidth mt='md'>
-                                {randomCote}
-                            </Button>
-                        )}
+                        <Button
+                            leftIcon={isVoted ? <IconCircleCheck /> : undefined}
+                            variant='filled'
+                            fullWidth
+                            mt='md'
+                            color={isVoted ? 'green' : 'indigo'}
+                        >
+                            {cote}
+                        </Button>
                     </Popover.Target>
 
                     {!vote && (
