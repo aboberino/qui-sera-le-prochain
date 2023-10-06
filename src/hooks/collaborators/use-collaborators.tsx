@@ -14,7 +14,7 @@ export const useCollaborators = ({ enabled }: { enabled?: boolean }) => {
             const equipeId = collaborator?.equipe // get from connected user > collaborator > equipe 'jro515bl4vdd8zn'
 
             const data = await pb.collection('collaborators').getFullList({
-                filter: `equipe = "${equipeId}"`,
+                filter: `equipe = "${equipeId}" && isLeft = false`,
                 sort: '-points',
                 expand: 'user'
             })

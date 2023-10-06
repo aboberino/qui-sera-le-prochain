@@ -9,7 +9,8 @@ export const CollaboratorSchema = z.object({
     image: z.string().optional().nullable(),
     points: z.number(),
     equipe: z.string(),
-    user: z.string()
+    user: z.string(),
+    isLeft: z.boolean()
 })
 
 export const CollaboratorCollectionSchema = z.object({
